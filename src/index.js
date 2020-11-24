@@ -31,25 +31,26 @@ function renderMovie(movie) {
   description.innerText = movie.description;
 
   let tickets = document.getElementById("ticket-num");
-  if (tickets.innerText === 0) {
-      tickets.innerText = "sold out"
-  } else {
+  
   tickets.innerText = movie.capacity - movie.tickets_sold;
-  }
 
   let button = document.getElementById("buy-button");
-  
+  if (tickets.innerText === 0) {
+      button.innerText = "Sold Out"
+  } else {
+
   button.addEventListener("click", () => {
-    buyTicket(movie)});
+    buyTicket(movie, button)});
+  }
+    
 }
 
-function buyTicket(movie) {
+function buyTicket(movie, button ) {
   if (movie.capacity > movie.tickets_sold) {
 movie.tickets_sold = movie.tickets_sold + 1
+  } else {
+      window.alert("All Sold Out")
   }
-
-  data = {};
-  data.tickets_sold = movie.tickets_sold;
 
   let id = movie.id;
   console.log(id)
@@ -57,6 +58,7 @@ movie.tickets_sold = movie.tickets_sold + 1
   fetch(`${url}/${id}`,{
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify({tickets_sold: movie.tickets_sold})
   })
+
 }  
